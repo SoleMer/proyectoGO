@@ -1,45 +1,54 @@
-package chat
+package main
 
 import (
 	"flag"
 	"fmt"
-	"o s"
-
 	"github.com/SoleMer/proyectoGO/internal/config"
 	"github.com/SoleMer/proyectoGO/internal/service/chat"
+	"github.com/SoleMer/proyectoGO/internal/database"
+	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
+	"os"
+
 )
 
 func main() {
-
-	cfg := readConfig();
+	// go run cmd/chat/chatsrv.go -config ./config/config.yaml
+	cfg := readConfig()
 	
-	db, err := database.Newdatabase(cfg)
+	db, err := database.NewDatabase(cfg)
+	defer db.Close()
+
 	if err != nil{
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	service, _ := chat.New(db, cfg)
+	httpService := chat.NewHTTPTransport(service)
 
-	for _, m := range service.findAll() {
-		fmt.Println(m)
-	}
+	r := gin.Default()
+	httpService.Register(r)
+	r.Run()
+
+
 }
 
-func readConfig(){
+func readConfig() *config.Config{
 	configFile := flag.String("config", "./config.yaml", "this is de service config")
 	flag.Parse()
 
 	cfg, err := config.LoadConfig(*configFile)
 	if err != nil {
-		fmt.Println(err.Error)
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
+	return cfg
 }
 
 func createSchema(db *sqlx.DB) error {
 	schema := `CREATE TABLE IF NOT EXISTS messages (
-		id integer primaty key autoincrement,
-		text varchar);`
+		id integer primary key autoincrement,
+		text varchar(60));`
 
 	//execute a query on the server
 	_, err := db.Exec(schema)
@@ -48,8 +57,8 @@ func createSchema(db *sqlx.DB) error {
 	}
 
 	//or, you can use MustExec, which panics on error
-	insertMessage := `INSER INTO messages (text) VALUES (?)`
-	s := fmt.Sprintf("Message number %v", time.Now().Nanosecond())
+	insertMessage := `INSERT INTO messages (text) VALUES (?)`
+	s := fmt.Sprintf("Hola")
 	db.MustExec(insertMessage, s)
 	return nil
 }

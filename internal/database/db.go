@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 
 	"github.com/SoleMer/proyectoGO/internal/config"
@@ -13,7 +12,7 @@ import (
 func NewDatabase(conf *config.Config) (*sqlx.DB, error) {
 	switch conf.DB.Type {
 	case "sqlite3":
-		db, err := sql.Open(conf.DB.Driver, conf.DB.Conn)
+		db, err := sqlx.Open(conf.DB.Driver, conf.DB.Conn)
 		if err != nil {
 			return nil, err
 		}

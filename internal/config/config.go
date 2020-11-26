@@ -20,7 +20,7 @@ type Config struct {
 }
 
 //LoadConfig ...
-func LoadConfing(filename string) (*Config, error) {
+func LoadConfig(filename string) (*Config, error) {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
