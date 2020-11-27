@@ -4,12 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"github.com/SoleMer/proyectoGO/internal/config"
-	"github.com/SoleMer/proyectoGO/internal/service/chat"
 	"github.com/SoleMer/proyectoGO/internal/database"
+	"github.com/SoleMer/proyectoGO/internal/service/chat"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"os"
-
 )
 
 func main() {
@@ -23,6 +22,10 @@ func main() {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
+	if err := createSchema(db); err != nil {
+		panic(err)
+	}
+
 	service, _ := chat.New(db, cfg)
 	httpService := chat.NewHTTPTransport(service)
 

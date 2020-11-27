@@ -67,7 +67,7 @@ func makeEndpoints(s service) []*endpoint {
 func getAll(s service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"messages": s.FindAll(),
+			"Messages": s.FindAll(),
 		})
 	}
 }
@@ -77,19 +77,19 @@ func getById(s service) gin.HandlerFunc{
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"Message": "no se encontró el mensaje",
+				"Error": "id inválido",
 			})
 		}
 
 		result, err := s.FindById(id)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"Message": "no se encontró el mensaje",
+				"Error": "no se encontró el mensaje",
 			})
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"message": *result,
+			"Message": *result,
 		})
 	}
 }
@@ -97,16 +97,9 @@ func getById(s service) gin.HandlerFunc{
 func postMessage(s service) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		text, err := strconv.Atoi(c.Param("text"))
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"Message": "no se pudo agregar el mensaje",
-			})
-		}
+		text := c.Param("text")
 
-		var msg Message
-
-		id, err := s.AddMessage(msg)
+		err := s.AddMessage(text)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -114,7 +107,7 @@ func postMessage(s service) gin.HandlerFunc {
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"Message": s.FindById(id),
+				"Messages": s.FindAll(),
 			})
 		}
 
@@ -126,20 +119,41 @@ func deleteMessage(s service) gin.HandlerFunc {
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"Message": "no se encontró el mensaje",
+				"Erro": "id inválido",
 			})
 		}
 
 		errD := s.DeleteMsg(id)
 		if errD != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"Message": "no se encontró el mensaje",
+				"Error": "no se pudo eliminar el mensaje",
 			})
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"message": "El mensaje fue eliminado",
+			"Mensaje eliminao": "Ok",
 		})
+	}
+}
+
+func putMessage (s service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, _ := strconv.Atoi(c.Param("id"))
+		text := c.Param("text")
+
+		result, err := s.EditMessage(id, text)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Error": "no se pudo editar el mensaje",
+			})
+		} else {
+
+			c.JSON(http.StatusOK, gin.H{
+				"Message": result,
+			})
+		}
+
 	}
 }
 

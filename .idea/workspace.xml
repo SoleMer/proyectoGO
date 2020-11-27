@@ -20,17 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05cb317b-83b9-47ad-8340-38ee63dfa285" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/proyectoGO.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/service/chat/transport.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/chat/chatsrv.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/chatsrv.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/database/db.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/service/chat/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/chat/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/chat/transport.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/chat/transport.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/test/data.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -102,6 +95,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -122,9 +116,9 @@
       <screen x="0" y="0" width="1024" height="600" />
     </state>
     <state width="196" height="457" key="HiddenNamespacesPopup/0.0.1024.600@0.0.1024.600" timestamp="1606348366870" />
-    <state x="355" y="60" key="refactoring.ChangeSignatureDialog" timestamp="1606352910376">
+    <state x="355" y="60" key="refactoring.ChangeSignatureDialog" timestamp="1606505275371">
       <screen x="0" y="0" width="1024" height="600" />
     </state>
-    <state x="355" y="60" key="refactoring.ChangeSignatureDialog/0.0.1024.600@0.0.1024.600" timestamp="1606352910376" />
+    <state x="355" y="60" key="refactoring.ChangeSignatureDialog/0.0.1024.600@0.0.1024.600" timestamp="1606505275371" />
   </component>
 </project>

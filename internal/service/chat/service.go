@@ -42,8 +42,19 @@ func (s service) AddMessage(t string) error {
 	return nil
 }
 
-func (s service) FindById(id int64) (*Message, error) {
-	return nil
+func (s service) FindById(id int) (*Message, error) {
+	getMessage := `SELECT * FROM messages WHERE id=?;`
+	s.db.MustExec(getMessage, id)
+
+	var msg Message
+	err := s.db.QueryRowx(getMessage, id).StructScan(&msg)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &msg, nil
+
 }
 
 func (s service) FindAll() []*Message {
@@ -53,5 +64,25 @@ func (s service) FindAll() []*Message {
 }
 
 func (s service) DeleteMsg(id int) error {
+	dltMsg := `DELETE FROM messages WHERE id=?;`
+	_, err := s.db.Exec(dltMsg, id)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (s service) EditMessage(id int, t string) (*Message, error) {
+	putMsg := `UPDATE messages SET text=? WHERE id=?;`
+	s.db.MustExec(putMsg, t, id)
+
+	result, err := s.FindById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
