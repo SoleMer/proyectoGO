@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -44,7 +45,7 @@ func makeEndpoints(s service) []*endpoint {
 
 	list = append(list, &endpoint{
 		method:   "POST",
-		path:     "/clothes/:name",
+		path:     "/clothes/:name/:price/:stock",
 		function: postItem(s),
 	})
 
@@ -56,7 +57,7 @@ func makeEndpoints(s service) []*endpoint {
 
 	list = append(list, &endpoint{
 		method:   "PUT",
-		path:     "/clothes/:id/:name",
+		path:     "/clothes/:id/:name/:price/:stock",
 		function: putItem(s),
 	})
 
@@ -73,7 +74,7 @@ func getAll(s service) gin.HandlerFunc {
 
 func getById(s service) gin.HandlerFunc{
 	return func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
+		id, err := strconv.ParseInt(c.Param("id"), 0, 10)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"Error": "id inválido",
@@ -96,17 +97,29 @@ func getById(s service) gin.HandlerFunc{
 func postItem(s service) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		name := c.Param("name")
 
-		err := s.AddItem(name)
+		name := c.Param("name")
+		price, _ := strconv.Atoi(c.Param("price"))
+		stock, _ := strconv.Atoi(c.Param("stock"))
+		fmt.Println(name)
+		fmt.Println(price)
+		fmt.Println(stock)
+		id, err := s.AddItem(name, price, stock)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"Error": "no se pudo agregar la prenda",
 			})
 		} else {
+			result, err := s.FindById(id)
+
+			if err != nil {
+				c.JSON(http.StatusOK, gin.H{
+					"Se argegó la prenda con el id": id,
+				})
+			}
 			c.JSON(http.StatusOK, gin.H{
-				"Clothes": s.FindAll(),
+				"Clothing item": result,
 			})
 		}
 
@@ -137,10 +150,12 @@ func deleteItem(s service) gin.HandlerFunc {
 
 func putItem (s service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, _ := strconv.Atoi(c.Param("id"))
+		id, _ := strconv.ParseInt(c.Param("id"), 0, 10)
 		name := c.Param("name")
+		price, _ := strconv.Atoi(c.Param("price"))
+		stock, _ := strconv.Atoi(c.Param("stock"))
 
-		result, err := s.EditItem(id, name)
+		result, err := s.EditItem(id, name, price, stock)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{

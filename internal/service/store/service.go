@@ -10,10 +10,12 @@ import (
 type ClothingItem struct {
 	ID   int64
 	Name string
+	Price int
+	Stock int
 }
 
-func NewClothingItem(n string) (ClothingItem) {
-	return ClothingItem{0, n}
+func NewClothingItem(n string, p int, s int) (ClothingItem) {
+	return ClothingItem{0, n, p, s}
 }
 
 // Service ...
@@ -21,6 +23,7 @@ type Service interface {
 	AddItem(item ClothingItem) error
 	FindByID(int) *ClothingItem
 	FindAll() []*ClothingItem
+	//TODO agregar funcs
 }
 
 type service struct {
@@ -33,16 +36,32 @@ func New(db *sqlx.DB, c *config.Config) (service, error) {
 	return service{db, c}, nil
 }
 
-func (s service) AddItem(n string) error {
+func (s service) AddItem(n string, p int, q int) (int64, error) {
 
-	insertItem  := `INSERT INTO clothes (name) VALUES (?)`
-	m := fmt.Sprintf(n)
-	s.db.MustExec(insertItem, m)
+	insertItem  := `INSERT INTO clothes (name, price, stock) VALUES (?, ?, ?)`
 
-	return nil
+	var cItem = ClothingItem{
+		Name: n,
+		Price: p,
+		Stock: q}
+
+	fmt.Println("service")
+	fmt.Println(cItem.Name)
+	fmt.Println(cItem.Price)
+	fmt.Println(cItem.Stock)
+
+	result := s.db.MustExec(insertItem, cItem.Name, cItem.Price, cItem.Stock)
+
+	lastID, err := result.LastInsertId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	return lastID, nil
 }
 
-func (s service) FindById(id int) (*ClothingItem, error) {
+func (s service) FindById(id int64) (*ClothingItem, error) {
 	getItem := `SELECT * FROM clothes WHERE id=?;`
 	s.db.MustExec(getItem, id)
 
@@ -74,9 +93,17 @@ func (s service) DeleteItem(id int) error {
 	return nil
 }
 
-func (s service) EditItem(id int, t string) (*ClothingItem, error) {
-	putItem := `UPDATE clothes SET name=? WHERE id=?;`
-	s.db.MustExec(putItem, t, id)
+func (s service) EditItem(id int64, n string, p int, q int) (*ClothingItem, error) {
+	putItem := `UPDATE clothes SET name=?, price=?, stock=? WHERE id=?;`
+
+	var cItem = ClothingItem{
+		Name: n,
+		Price: p,
+		Stock: q,
+	}
+
+	s.db.MustExec(putItem, cItem.Name, cItem.Price, cItem.Stock, id)
+
 
 	result, err := s.FindById(id)
 

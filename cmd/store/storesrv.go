@@ -17,7 +17,7 @@ func main() {
 
 	db, err := database.NewDatabase(cfg)
 	fmt.Println(db)
-	//defer db.Close()
+	defer db.Close()
 
 	if err != nil{
 		fmt.Println(err.Error())
@@ -52,8 +52,10 @@ func readConfig() *config.Config{
 func createSchema(db *sqlx.DB) error {
 	schema := `CREATE TABLE IF NOT EXISTS clothes (
 		id integer primary key autoincrement,
-		name varchar(60));`
-
+		name varchar(60),
+		price integer,
+		stock integer);`
+	fmt.Println(schema)
 	//execute a query on the server
 	_, err := db.Exec(schema)
 	if err != nil {
@@ -61,8 +63,12 @@ func createSchema(db *sqlx.DB) error {
 	}
 
 	//or, you can use MustExec, which panics on error
-	insertItem := `INSERT INTO clothes (name) VALUES (?)`
-	s := fmt.Sprintf("Remera")
-	db.MustExec(insertItem, s)
+	insertItem := `INSERT INTO clothes (name, price, stock) VALUES (?, ?, ?)`
+	var cItem = store.ClothingItem{
+		Name: "jean",
+		Price: 700,
+		Stock: 4}
+
+	db.MustExec(insertItem, cItem.Name, cItem.Price, cItem.Stock)
 	return nil
 }
