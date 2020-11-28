@@ -2,13 +2,12 @@ package database
 
 import (
 	"errors"
-
-	"github.com/SoleMer/proyectoGO/internal/config"
+	"github.com/SoleMer/dulceCaliGo/internal/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" //adding sqlite driver support
 )
 
-// Newdatabase ...
+//NewDatabase ...
 func NewDatabase(conf *config.Config) (*sqlx.DB, error) {
 	switch conf.DB.Type {
 	case "sqlite3":
@@ -24,6 +23,6 @@ func NewDatabase(conf *config.Config) (*sqlx.DB, error) {
 
 		return db, nil
 	default:
-		return nil, errors.New("invalid db type")
+		return nil, errors.New(conf.DB.Type)
 	}
 }
