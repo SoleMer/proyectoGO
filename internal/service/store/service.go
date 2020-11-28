@@ -45,11 +45,6 @@ func (s service) AddItem(n string, p int, q int) (int64, error) {
 		Price: p,
 		Stock: q}
 
-	fmt.Println("service")
-	fmt.Println(cItem.Name)
-	fmt.Println(cItem.Price)
-	fmt.Println(cItem.Stock)
-
 	result := s.db.MustExec(insertItem, cItem.Name, cItem.Price, cItem.Stock)
 
 	lastID, err := result.LastInsertId()

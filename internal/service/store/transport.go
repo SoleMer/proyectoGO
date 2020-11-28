@@ -1,7 +1,6 @@
 package store
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -101,9 +100,7 @@ func postItem(s service) gin.HandlerFunc {
 		name := c.Param("name")
 		price, _ := strconv.Atoi(c.Param("price"))
 		stock, _ := strconv.Atoi(c.Param("stock"))
-		fmt.Println(name)
-		fmt.Println(price)
-		fmt.Println(stock)
+	
 		id, err := s.AddItem(name, price, stock)
 
 		if err != nil {
