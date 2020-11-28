@@ -1,7 +1,6 @@
 package store
 
 import (
-	"fmt"
 	"github.com/SoleMer/dulceCaliGo/internal/config"
 	"github.com/jmoiron/sqlx"
 )
@@ -20,10 +19,11 @@ func NewClothingItem(n string, p int, s int) (ClothingItem) {
 
 // Service ...
 type Service interface {
-	AddItem(item ClothingItem) error
-	FindByID(int) *ClothingItem
+	AddItem(n string, p int, q int) (int64, error)
+	FindByID(int) (*ClothingItem, error)
 	FindAll() []*ClothingItem
-	//TODO agregar funcs
+	DeleteItem(id int) error
+	EditItem(id int64, n string, p int, q int) (*ClothingItem, error)
 }
 
 type service struct {
